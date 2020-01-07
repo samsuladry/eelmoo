@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
-const admin = require("firebase-admin")
+const admin = require("firebase-admin");
+const cors = require('cors');
 
 const app = require("express")();
 admin.initializeApp();
@@ -36,6 +37,8 @@ const isEmpty = (String) =>
     if(String.trim() === "") return true;
     else return false;
 }
+
+app.use(cors());
 
 
 //Signup route
