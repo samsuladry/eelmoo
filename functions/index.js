@@ -46,10 +46,13 @@ app.post("/signup", (req, res) =>
 {
     const newUser = 
     {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
-        handle: req.body.handle,
+        type: req.body.type,
+        handle: req.body.handle
     };
 
     let errors = {};
@@ -101,6 +104,7 @@ app.post("/signup", (req, res) =>
                     handle: newUser.handle,
                     email: newUser.email,
                     createdAt: new Date().toISOString(),
+                    type: newUser.type,
                     userId
                 };
                 return db.doc(`/users/${newUser.handle}`).set(userCredentials);
