@@ -46,13 +46,12 @@ app.post("/signup", (req, res) =>
 {
     const newUser = 
     {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
         type: req.body.type,
-        handle: req.body.handle
+        username: req.body.username
     };
 
     let errors = {};
@@ -69,20 +68,20 @@ app.post("/signup", (req, res) =>
     if(isEmpty(newUser.password)) errors.password = "Must not be empty";
     if(newUser.password !== newUser.confirmPassword) 
         errors.confirmPassword = "passwords must match";
-    if(isEmpty(newUser.handle)) errors.handle = "Must not be empty";
+    if(isEmpty(newUser.username)) errors.username = "Must not be empty";
 
     if(Object.keys(errors).length > 0 ) return res.status(400).json(errors);
 
     //TODO: validate data
 
     let token, userId;
-    db.doc(`/users/${newUser.handle}`)
+    db.doc(`/users/${newUser.username}`)
         .get()
         .then(doc => 
             {
                 if(doc.exists)
                 {
-                    return res.status(400). json({ handle: 'this handle is already taken'});
+                    return res.status(400). json({ username: 'this username is already taken'});
                 }
                 else
                 {
@@ -101,13 +100,13 @@ app.post("/signup", (req, res) =>
                token = idToken;
                 const userCredentials = 
                 {
-                    handle: newUser.handle,
+                    username: newUser.username,
                     email: newUser.email,
                     createdAt: new Date().toISOString(),
                     type: newUser.type,
                     userId
                 };
-                return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+                return db.doc(`/users/${newUser.username}`).set(userCredentials);
 
             })
         .then(() => 
